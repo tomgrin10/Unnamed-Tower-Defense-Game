@@ -1,12 +1,14 @@
 #include "Tower.h"
 #include "Bullet.h"
+#include "QtUtils.h"
 #include <QBrush>
 #include <QTimer>
-#include <QDebug>
 #include <QPoint>
 
-Tower::Tower(int x, int y, QGraphicsScene *scene) : QGraphicsRectItem(x, y, width, height)
+Tower::Tower(int x, int y, QGraphicsScene *scene, QObject *parent) : QGraphicsRectItem(x, y, width, height)
 {
+	this->setParent(parent);
+
 	QBrush brush;	// color it
 	brush.setStyle(Qt::SolidPattern);
 	brush.setColor(START_COLOR);
@@ -14,7 +16,6 @@ Tower::Tower(int x, int y, QGraphicsScene *scene) : QGraphicsRectItem(x, y, widt
 	this->setAcceptHoverEvents(true);
 
 	scene->addItem(this);	// add to scene
-	qDebug() << scenePos().x();
 }
 
 Tower::TowerState Tower::state()
@@ -36,7 +37,7 @@ void Tower::mousePressEvent(QGraphicsSceneMouseEvent *event)
 		// Set up shoot mechanism
 		QTimer *timer = new QTimer;
 		connect(timer, SIGNAL(timeout()), this, SLOT(fire()));
-		timer->start(2000);
+		timer->start(rateOfFire);
 	}
 }
 
@@ -64,8 +65,24 @@ void Tower::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 	}
 }
 
+Enemy* Tower::getClosestEnemy()
+{
+	int minDistance = 1000;
+	Enemy* closest = nullptr;
+	foreach(Enemy* enemy, parent()->findChildren<Enemy*>())
+	{
+		int currDistance = QtUtils::distance(mapToScene(rect().center()), enemy->mapToScene(enemy->rect().center()));
+		if (currDistance < minDistance)
+		{
+			minDistance = currDistance;
+			closest = enemy;
+		}
+	}
+	return closest;
+}
+
 void Tower::fire()
 {
-	qDebug() << mapToScene(0, 0).x();
-	Bullet *bullet = new Bullet(scenePos().x() + width / 2, scenePos().y() + height / 2, scene());
+	if (Enemy *enemy = getClosestEnemy())
+		new Bullet(mapToScene(rect().center()).x(), mapToScene(rect().center()).y(), enemy, scene(), parent());
 }

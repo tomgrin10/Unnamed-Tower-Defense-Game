@@ -1,4 +1,5 @@
 #pragma once
+#include "Enemy.h"
 #include <QGraphicsRectItem>
 #include <QObject>
 #include <QGraphicsScene>
@@ -19,8 +20,11 @@ public:
 	enum TowerState { Wall, Shoot };
 	static const int height = 60;
 	static const int width = 60;
+	static const int rateOfFire = 3000;
 
-	Tower(int x, int y, QGraphicsScene *scene);
+	Tower(int x, int y, QGraphicsScene *scene, QObject *parent);
+
+	Enemy* getClosestEnemy();
 
 	TowerState state();
 

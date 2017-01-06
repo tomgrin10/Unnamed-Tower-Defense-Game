@@ -13,7 +13,7 @@ public:
 	static const Qt::GlobalColor color = Qt::red;
 	static const int speed = 100;
 
-	Enemy(int x, int y, QGraphicsScene *scene);
+	Enemy(int x, int y, QGraphicsScene *scene, QObject* parent);
 	void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private slots:

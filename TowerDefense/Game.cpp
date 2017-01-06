@@ -17,7 +17,7 @@ Game::Game(QGraphicsScene *scene) : QGraphicsView(scene)
 	{
 		for (int j = 0; j < NUM_OF_TOWERS; j++)
 		{
-			Tower *tower = new Tower(Tower::width * j, currY, scene);
+			Tower *tower = new Tower(Tower::width * j, currY, scene, this);
 		}
 		currY += Tower::height + SPACE_FOR_ENEMIES;
 	}
@@ -37,5 +37,5 @@ void Game::spawnEnemy(int top, int bottom)
 	std::mt19937 generator(rnd());
 	std::uniform_int_distribution<int> rand(top, bottom - Enemy::height);
 
-	Enemy *enemy = new Enemy(0 - Enemy::width, rand(generator), scene());
+	Enemy *enemy = new Enemy(0 - Enemy::width, rand(generator), scene(), this);
 }

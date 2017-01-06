@@ -6,8 +6,10 @@
 #include <QDebug>
 #include <QBrush>
 
-Enemy::Enemy(int x, int y, QGraphicsScene *scene) : QGraphicsRectItem(x, y, width, height)
+Enemy::Enemy(int x, int y, QGraphicsScene *scene, QObject* parent) : QGraphicsRectItem(x, y, width, height)
 {
+	this->setParent(parent);
+
 	QBrush brush;	// set color
 	brush.setStyle(Qt::SolidPattern);
 	brush.setColor(color);
@@ -17,7 +19,7 @@ Enemy::Enemy(int x, int y, QGraphicsScene *scene) : QGraphicsRectItem(x, y, widt
 	QTimer *timer = new QTimer();
 	QObject::connect(timer, SIGNAL(timeout()), this, SLOT(move()));
 	timer->start(REFRESH_RATE);
-
+	
 	scene->addItem(this);
 }
 
